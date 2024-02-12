@@ -27,7 +27,11 @@ A comprehensive notification card in Microsoft Teams for your github workflows.
 ```yaml
 name: MS Teams Deploy Card
 
-on: [push]
+on:
+  pull_request_review:
+    types: [submitted, dismissed, edited]
+  pull_request_review_comment:
+    types: [created, edited, deleted]
 
 jobs:
   build:
@@ -35,8 +39,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Set Environment Variables
+        if: >-
+          github.event_name == 'pull_request' || github.event_name == 'pull_request_review' || github.event_name == 'pull_request_review_comment'
+        run: |
+          echo "PR_NUMBER=${{ github.event.pull_request_review.pull_request.number || github.event.pull_request_review_comment.pull_request.number }}" >> $GITHUB_ENV
+          echo "PR_TITLE=${{ github.event.pull_request_review.pull_request.title || github.event.pull_request_review_comment.pull_request.title }}" >> $GITHUB_ENV
+          echo "PR_HTML_URL=${{ github.event.pull_request_review.pull_request.html_url || github.event.pull_request_review_comment.pull_request.html_url }}" >> $GITHUB_ENV
+          echo "PR_BRANCH=${{ github.event.pull_request_review.pull_request.head.ref || github.event.pull_request_review_comment.pull_request.head.ref }}" >> $GITHUB_ENV
+          echo "DETAIL_URL=${{ github.event.review.html_url || github.event.comment.html_url }}" >> $GITHUB_ENV
+          echo "REVIEWER_LOGIN=${{ github.event.review.user.login || github.event.comment.user.login }}" >> $GITHUB_ENV
       # this is the new step
-      - uses: dchourasia/ms-teams-notification@1.0 #  or "./" if in a local set-up
+      - uses: tonsorn/new-comment-ms-teams-notify@v1.0.1 #  or "./" if in a local set-up
         if: always()
         with:
           github-token: ${{ github.token }}
