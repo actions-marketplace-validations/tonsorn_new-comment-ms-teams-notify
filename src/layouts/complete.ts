@@ -52,10 +52,10 @@ export function formatCompleteLayout(
 
   // Set section facts
   section.facts = [
+    new Fact("PR Title:", `${process.env.PR_TITLE}`),
     new Fact("Repository:", `${process.env.GITHUB_REPOSITORY}`),
     new Fact("Branch:", `${process.env.PR_BRANCH}`),
     new Fact("Reviewer:", `[@${reviewerLogin}](${reviewerHtmlUrl})`),
-    new Fact("PR Title:", `${process.env.PR_TITLE}`),
     new Fact("Details:", detailMessage),
   ];
 
