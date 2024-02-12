@@ -1,0 +1,41 @@
+name: Review Comment Notification
+
+on:
+  pull_request_review:
+    types: [submitted, dismissed, edited]
+  pull_request_review_comment:
+    types: [created, edited, deleted]
+
+jobs:
+  notify_on_review_and_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Environment Variables
+        run: |
+          echo "PR_NUMBER=${{ github.event.pull_request.number || github.event.pull_request_review.pull_request.number || github.event.pull_request_review_comment.pull_request.number }}" >> $GITHUB_ENV
+          echo "PR_TITLE=${{ github.event.pull_request.title || github.event.pull_request_review.pull_request.title || github.event.pull_request_review_comment.pull_request.title }}" >> $GITHUB_ENV
+          echo "PR_HTML_URL=${{ github.event.pull_request.html_url || github.event.pull_request_review.pull_request.html_url || github.event.pull_request_review_comment.pull_request.html_url }}" >> $GITHUB_ENV
+          echo "PR_BRANCH=${{ github.event.pull_request.head.ref || github.event.pull_request_review.pull_request.head.ref || github.event.pull_request_review_comment.pull_request.head.ref }}" >> $GITHUB_ENV
+          echo "DETAIL_URL=${{ github.event.review.html_url || github.event.comment.html_url }}" >> $GITHUB_ENV
+          echo "REVIEWER_LOGIN=${{ github.event.review.user.login || github.event.comment.user.login }}" >> $GITHUB_ENV
+        if: >-
+          github.event_name == 'pull_request_review' || github.event_name == 'pull_request_review_comment'
+
+      - uses: ./
+        if: >-
+          (github.event_name == 'pull_request_review' && github.event.review.state == 'commented' && !github.event.review.body == 'None' && !github.event.review.body == '') ||
+          (github.event_name == 'pull_request_review_comment' && github.event.action == 'created' || github.event.action == 'edited' || github.event.action == 'deleted')
+        
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          webhook-uri: ${{ secrets.MSTEAMS_WEBHOOK }}
+          show-on-start: false
+          show-on-exit: true
+          card-layout-exit: complete
+          timezone: "Asia/Bangkok"
+          include-files: true
+          review-diffs-action-text: "Review commit diffs"
+          custom-facts: |
+            - name: Comment
+              value: "${{ github.event.review.body || github.event.comment.body || 'None' }}"
