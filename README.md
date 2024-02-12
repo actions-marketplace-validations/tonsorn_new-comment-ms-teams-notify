@@ -1,6 +1,11 @@
 # Microsoft Teams Notification
 
 
+This project uses open source software:
+
+- [Project Name](https://github.com/dchourasia/ms-teams-notification): Copyright (c) 2024, Deepak Chourasia
+  - Licensed under the MIT License. See [LICENSE](https://github.com/tonsorn/new-comment-ms-teams-notify/blob/main/LICENSE) file in the project root for full license information.
+
 A comprehensive notification card in Microsoft Teams for your github workflows.
 
 <!-- ### Layouts
