@@ -3,7 +3,7 @@
 
 A comprehensive notification card in Microsoft Teams for your github workflows.
 
-### Layouts
+<!-- ### Layouts
 
 #### Complete
 
@@ -11,7 +11,7 @@ A comprehensive notification card in Microsoft Teams for your github workflows.
 
 #### Cozy
 
-![](screenshots/layout-cozy.png)
+![](screenshots/layout-cozy.png) -->
 
 ### Usage
 
@@ -57,7 +57,6 @@ jobs:
 
 | Name                       | Required | Default                      | Description                                                                                                             |
 | -------------------------- | -------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `environment`              | `false`  | None                         | Name of the environment, e.g. `development`, `production` (won't be included in the card if none)                       |
 | `timezone`                 | `false`  | `"UTC"`                      | A [valid database timezone name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. `Australia/Sydney` |
 | `enable-view-status`       | `false`  | `true`                       | Enable an action to view the deployment status                                                                          |
 | `enable-review-diffs`      | `false`  | `true`                       | Enable an action to review commit diffs                                                                                 |
